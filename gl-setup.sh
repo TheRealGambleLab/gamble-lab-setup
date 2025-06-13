@@ -66,22 +66,22 @@ cfg_root="${XDG_CONFIG_HOME:-$HOME/.config}/gamble-lab-setup"
 mkdir -p "$cfg_root"
 
 if is_hpc; then
-  jf_url="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/main/gl-hpc-setup.just"
+  jf_url="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/refs/heads/master/gl-hpc-setup.just"
   jf_path="$cfg_root/gl-hpc-setup.just"
 else
-  jf_url="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/main/gl-setup.just"
+  jf_url="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/refs/heads/master/gl-setup.just"
   jf_path="$cfg_root/gl-setup.just"
 fi
 
 log "downloading $(basename "$jf_path")"
 download "$jf_url" "$jf_path"
 
-jf_url2="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/main/gl-git-config.just"
+jf_url2="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/refs/heads/master/gl-git-config.just"
 jf_path2="$cfg_root/gl-git-config.just"
 
 download "$jf_url2" "$jf_path2"
 
-jf_url3="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/main/gl-ssh-key.just"
+jf_url3="https://raw.githubusercontent.com/TheRealGambleLab/gamble-lab-setup/refs/heads/master/gl-ssh-key.just"
 jf_path3="$cfg_root/gl-ssh-key.just"
 
 download "$jf_url3" "$jf_path3"
