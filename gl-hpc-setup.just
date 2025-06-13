@@ -1,3 +1,5 @@
+set unstable
+
 gl-setup: setup-conda (conda-install "curl") (conda-install "7z" "p7zip") (conda-install "git") (conda-install "git-annex") (conda-install "rclone") (conda-install "git-annex-remote-rclone") (conda-install "gh") (conda-install "apptainer") install-uv (uv-tool-install "quarto" "quarto-cli") (uv-tool-install "gln" "git+ssh://git@github.com/TheRealGambleLab/gln#egg=gln[extensions]") install-typst
 
 [private, script("bash")]

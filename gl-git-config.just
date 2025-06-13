@@ -1,5 +1,7 @@
 ######### git config ###############
 
+set unstable
+
 existing_name := `git config --global --default none user.name`
 existing_email := `git config --global --default none user.email`
 

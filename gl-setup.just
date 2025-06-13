@@ -1,3 +1,5 @@
+set unstable
+
 gl_setup: (pm-install "curl") (pm-install "7z" "p7zip") (pm-install "git") (pm-install "git-annex") (pm-install "rclone") (pm-install "git-annex-remote-rclone") install-uv (uv-tool-install "quarto" "quarto-cli") (uv-tool-install "gln" "git+ssh://git@github.com/TheRealGambleLab/gln#egg=gln[extensions]") install-gh install-typst
 
 [private, script("bash")]

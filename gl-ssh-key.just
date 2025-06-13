@@ -1,4 +1,5 @@
 ############### ssh keys ###########
+set unstable
 
 key_protocol := "ed25519"
 
