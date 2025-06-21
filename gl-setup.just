@@ -103,31 +103,43 @@ install-typst:
     echo "typst already installed."
     exit 0
   fi
+  #----------- Config ---------------------------------------------------------
   LOCAL_BIN="$HOME/.local/bin"
   TYPST_BIN="$LOCAL_BIN/typst"
   EXPORT_LINE='export PATH="$HOME/.local/bin:$PATH"'
   mkdir -p "$LOCAL_BIN"
-  # Detect OS
-  OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
-  ARCH="$(uname -m)"
-  # Normalize architecture
-  case "$ARCH" in
-    x86_64) ARCH="x86_64" ;;
-    aarch64|arm64) ARCH="aarch64" ;;
-    *) echo "❌ Unsupported architecture: $ARCH"; exit 1 ;;
+  #----------- Detect platform -----------------------------------------------
+  os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  arch=$(uname -m)
+  case "$arch" in
+    x86_64|amd64)   arch="x86_64" ;;
+    aarch64|arm64)  arch="aarch64" ;;
+    *) echo "❌ Unsupported architecture: $arch"; exit 1 ;;
   esac
-  # Determine download URL
-  if [[ "$OS" == "linux" ]]; then
-    URL="https://github.com/typst/typst/releases/latest/download/typst-${ARCH}-unknown-linux-musl.tar.xz"
-  elif [[ "$OS" == "darwin" ]]; then
-    URL="https://github.com/typst/typst/releases/latest/download/typst-${ARCH}-apple-darwin.tar.xz"
-  else
-    echo "❌ Unsupported OS: $OS"
-    exit 1
+  case "$os" in
+    linux)  asset="typst-${arch}-unknown-linux-musl.tar.xz" ;;
+    darwin) asset="typst-${arch}-apple-darwin.tar.xz" ;;
+    *) echo "❌ Unsupported OS: $os"; exit 1 ;;
+  esac
+  url="https://github.com/typst/typst/releases/latest/download/${asset}"
+  #----------- Fetch & install -----------------------------------------------
+  tmp=$(mktemp -d)
+  echo "⬇️  Downloading $asset ..."
+  curl -Ls "$url" -o "$tmp/typst.tar.xz"
+  echo "📦  Extracting binary ..."
+  tar --extract --file="$tmp/typst.tar.xz" \
+    --directory="$tmp" \
+    --strip-components=1 \
+    --wildcards --no-anchored --wildcards-match-slash \
+    '*/typst'
+  # tar -xJf "$tmp/typst.tar.xz" -C "$tmp" */typst --strip-components=1
+  echo "🚚  Installing to $TYPST_BIN"
+  install -Dm755 "$tmp/typst" "$TYPST_BIN"
+  rm -rf "$tmp"
+  #----------- Ensure PATH persistence ---------------------------------------
+  if ! grep -qxF "$EXPORT_LINE" ~/.bashrc 2>/dev/null; then
+    echo "$EXPORT_LINE" >> ~/.bashrc
+    echo "🔔 Added ~/.local/bin to PATH in ~/.bashrc"
   fi
-  echo "⬇️ Installing Typst for $ARCH-$OS..."
-  # Download and install directly
-  curl -Ls "$URL" | tar -xJf - -O > "$TYPST_BIN"
-  chmod +x "$TYPST_BIN"
-  echo "✅ Typst installed to $TYPST_BIN"
+  echo "✅ $(typst --version) installed."
 
